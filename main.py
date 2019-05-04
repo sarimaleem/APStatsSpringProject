@@ -1,3 +1,9 @@
+#MR MEYER READ THIS IF YOU ARE LOOKING AT MY CODE
+#THIS IS MY RAW CODE, ITS DIFFICULT TO UNDERSTAND ANYTING FROM IT
+#I'VE CREATED A NICE VISUALIZATION CLICK ON THE LINK BELOW
+#    https://www.kaggle.com/explodingmind/test-kernel?scriptVersionId=13721952
+
+
 from numpy import genfromtxt
 import matplotlib.pyplot as plt
 import seaborn as sns
