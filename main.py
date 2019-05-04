@@ -2,12 +2,37 @@ from numpy import genfromtxt
 import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy import stats
+import numpy as np
 
 data = genfromtxt('/Users/admin/PycharmProjects/apstatsspringproject/Inflation vs 5-year treasury bond yields - Sheet1 (1).csv', delimiter=',')
 
 years = data[:, 0]
-inflation = data[:, 1]
+inflation = data[:, 1] * 100
 yields = data[:, 2]
+
+testHue = []
+
+for i in range(7):
+    testHue.append("1960s")
+
+for i in range(10):
+    testHue.append("1970s")
+
+for i in range(10):
+    testHue.append("1980s")
+
+for i in range(10):
+    testHue.append("1990s")
+
+for i in range(10):
+    testHue.append("2000s")
+
+for i in range(9):
+    testHue.append("2010s")
+
+
+
+
 sns.set(style="darkgrid")
 
 
@@ -24,24 +49,39 @@ plt.ylabel("5-year treasury yields")
 plt.title("5-year treasury yields over time")
 
 plt.figure()
-sns.scatterplot(yields, inflation)
-slope, intercept, r_value, p_value, std_err = stats.linregress(yields, inflation)
+sns.scatterplot(inflation, yields, hue=testHue)
+slope, intercept, r_value, p_value, std_err = stats.linregress(inflation, yields)
 plt.plot(yields, intercept + slope*yields, 'r', label='fitted line', linestyle=":")
 plt.title("5-year Treasury Yields vs Inflation Scatter Plot")
-plt.xlabel("5-year treasury yield")
-plt.ylabel("Average Inflation")
-
+plt.ylabel("5-year treasury yield (Percentage Points)")
+plt.xlabel("Average Annual Inflation (Percentage Points)")
 
 plt.figure()
-sns.residplot(yields, inflation)
+sns.residplot(inflation, yields)
 plt.title("Residual Plot")
 plt.ylabel("Residual for Predicted Value")
-plt.xlabel("5-year treasury yields")
+plt.xlabel("Inflation (Percentage Points)")
+
+residuals = []
+
+for i in range(np.prod(inflation.shape)):
+    x = inflation[i]
+    pred = x * slope + intercept
+    obs = yields[i]
+    resid = obs - pred
+    residuals.append(resid)
 
 plt.figure()
-sns.jointplot(yields, inflation, kind="reg")
-plt.xlabel("5-year treasury yield")
-plt.ylabel("Average Inflation")
+npp = stats.probplot(residuals, plot=plt)
+plt.title("Normal Probability Plot for Residuals")
+plt.ylabel("Observed Residual")
+plt.xlabel("Expected Normal Residual")
+
+
+plt.figure()
+sns.jointplot(inflation, yields, kind="reg")
+plt.xlabel("5-year treasury yield (Percentage Points)")
+plt.ylabel("Average Annual Inflation (Percentage Points)")
 
 print(f"intercept={intercept}")
 print(f"p_value={p_value}")
